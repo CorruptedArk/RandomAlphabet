@@ -1,10 +1,12 @@
 package dev.corruptedark.randomalphabet;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.concurrent.ExecutionException;
 
 public class MainForm {
 
@@ -20,12 +22,19 @@ public class MainForm {
     private JPanel mainForm;
     private JSpinner bucketSizeSpinner;
     private JLabel bucketSizeLabel;
-    private JLabel invalidLabel;
+    private JLabel feedBackLabel;
+    private JButton plainTextCopyButton;
+    private JButton encodedTextCopyButton;
+    private JButton plainTextPasteButton;
+    private JButton encodeTextPasteButton;
     private RandomTranslator translator;
     private SpinnerNumberModel numberModel;
+    private Clipboard clipboard;
 
 
     public MainForm() {
+
+        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
         numberModel = new SpinnerNumberModel();
         numberModel.setMinimum(1);
@@ -40,6 +49,9 @@ public class MainForm {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 translator = new RandomTranslator(keyBox.getText(), (int)bucketSizeSpinner.getValue());
+                feedBackLabel.setForeground(Color.green);
+                feedBackLabel.setText("Alphabet Generated");
+                feedBackLabel.setVisible(true);
             }
         });
 
@@ -53,11 +65,13 @@ public class MainForm {
                     try
                     {
                         encodedTextBox.setText(translator.encodeText(plainTextBox.getText()));
-                        invalidLabel.setVisible(false);
+                        feedBackLabel.setVisible(false);
                     }
                     catch (Exception except)
                     {
-                        invalidLabel.setVisible(true);
+                        feedBackLabel.setText("Invalid Translation");
+                        feedBackLabel.setForeground(Color.red);
+                        feedBackLabel.setVisible(true);
                     }
                 }
             }
@@ -73,12 +87,91 @@ public class MainForm {
                     try
                     {
                         plainTextBox.setText(translator.decodeText(encodedTextBox.getText()));
-                        invalidLabel.setVisible(false);
+                        feedBackLabel.setVisible(false);
                     }
                     catch(Exception except)
                     {
-                        invalidLabel.setVisible(true);
+                        feedBackLabel.setText("Invalid Translation");
+                        feedBackLabel.setForeground(Color.red);
+                        feedBackLabel.setVisible(true);
                     }
+                }
+            }
+        });
+
+
+        plainTextCopyButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                StringSelection selection = new StringSelection(plainTextBox.getText());
+                clipboard.setContents(selection, null);
+
+                feedBackLabel.setText("Text Copied");
+                feedBackLabel.setForeground(Color.green);
+                feedBackLabel.setVisible(true);
+            }
+        });
+
+
+        plainTextPasteButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                try
+                {
+                    String pasteText = (String)clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
+                    plainTextBox.setText(pasteText);
+                    feedBackLabel.setText("Paste Successful");
+                    feedBackLabel.setForeground(Color.green);
+                    feedBackLabel.setVisible(true);
+                }
+                catch (Exception except)
+                {
+                    feedBackLabel.setText("Invalid Paste");
+                    feedBackLabel.setForeground(Color.red);
+                    feedBackLabel.setVisible(true);
+                }
+
+            }
+        });
+
+
+        encodedTextCopyButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                StringSelection selection = new StringSelection(encodedTextBox.getText());
+                clipboard.setContents(selection, null);
+
+                feedBackLabel.setText("Text Copied");
+                feedBackLabel.setForeground(Color.green);
+                feedBackLabel.setVisible(true);
+            }
+        });
+
+
+        encodeTextPasteButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                try
+                {
+                    String pasteText = (String)clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
+                    encodedTextBox.setText(pasteText);
+                    feedBackLabel.setText("Paste Successful");
+                    feedBackLabel.setForeground(Color.green);
+                    feedBackLabel.setVisible(true);
+                }
+                catch (Exception except)
+                {
+                    feedBackLabel.setText("Invalid Paste");
+                    feedBackLabel.setForeground(Color.red);
+                    feedBackLabel.setVisible(true);
                 }
             }
         });
