@@ -9,16 +9,16 @@ package dev.corruptedark.randomalphabet;
  *
  * @author Noah
  */
-public class FiveTuple {
+public class NTuple {
     private int[] values;
     private int index;
     private int location;
-    
-    public FiveTuple(int[] values, int fourth, int fifth)
+
+    public NTuple(int[] values, int penultimate, int ultimate)
     {
         this.values = values;
-        index = fourth;
-        location = fifth;
+        index = penultimate;
+        location = ultimate;
     }
     
     public int[] getValues()

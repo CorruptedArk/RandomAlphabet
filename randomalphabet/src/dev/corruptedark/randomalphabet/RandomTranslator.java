@@ -16,12 +16,13 @@ import java.util.List;
  */
 public class RandomTranslator {
     
-    SecureRandom rand;
-    AlphabetHandler handler;
+    private SecureRandom rand;
+    private AlphabetHandler handler;
+    private int decoyCount;
     
-    
-    public RandomTranslator(String key, int bucketSize)
+    public RandomTranslator(String key, int bucketSize, int decoyCount)
     {
+        this.decoyCount = decoyCount;
         rand = new SecureRandom();
         handler = new AlphabetHandler();
         handler.generateAlphabet(key, bucketSize);
@@ -29,16 +30,16 @@ public class RandomTranslator {
     
     public String encodeText(String text)
     {
-        List<FiveTuple> tupleList = new ArrayList<>();
-        int[] tempArray = new int[3];
+        List<NTuple> tupleList = new ArrayList<>();
+        int[] tempArray = new int[decoyCount + 1];
         int tempIndex;
         String encodedText;
 
         try {
             for (int i = 0; i < text.length(); i++) {
-                tempIndex = rand.nextInt(3);
+                tempIndex = rand.nextInt(decoyCount + 1);
 
-                for (int j = 0; j < 3; j++) {
+                for (int j = 0; j < decoyCount + 1; j++) {
                     tempArray[j] = handler.randomValue();
                 }
 
@@ -46,24 +47,29 @@ public class RandomTranslator {
 
                 tempIndex = handler.getValueForLetter((char) (tempIndex + '0'));
 
-                tupleList.add(new FiveTuple(tempArray.clone(), tempIndex, i));
+                tupleList.add(new NTuple(tempArray.clone(), tempIndex, i));
             }
 
             for (int i = 0; i < tupleList.size(); i++) {
                 int index = rand.nextInt(tupleList.size());
-                FiveTuple temp = tupleList.get(index);
+                NTuple temp = tupleList.get(index);
                 tupleList.set(index, tupleList.get(i));
                 tupleList.set(i, temp);
             }
 
             encodedText = "";
-            for (int i = 0; i < tupleList.size(); i++) {
+            for (int i = 0; i < tupleList.size(); i++)
+            {
                 tempArray = tupleList.get(i).getValues();
                 tempIndex = tupleList.get(i).getIndex();
                 int tempLocation = tupleList.get(i).getLocation();
 
-                encodedText += String.valueOf(tempArray[0]) + "," + String.valueOf(tempArray[1]) + "," + String.valueOf(tempArray[2]) + ","
-                        + String.valueOf(tempIndex) + "," + String.valueOf(tempLocation) + ";";
+                for(int j = 0; j < tempArray.length; j++)
+                {
+                    encodedText += String.valueOf(tempArray[j]) + ",";
+                }
+
+                encodedText += String.valueOf(tempIndex) + "," + String.valueOf(tempLocation) + ";";
             }
         }
         catch (Exception e)
@@ -83,16 +89,22 @@ public class RandomTranslator {
         char tempLetter;
         int tempLocation;
 
+        int penultimate;
+        int ultimate;
+
         try
         {
             for(int i = 0; i < tupleSplit.length; i++)
             {
+                tempSplit = tupleSplit[i].split(",");
 
-                    tempSplit = tupleSplit[i].split(",");
-                    tempIndex = Integer.parseInt(String.valueOf(handler.getCharFromValue(Integer.parseInt(tempSplit[3]))));
-                    tempLetter = handler.getCharFromValue(Integer.parseInt(tempSplit[tempIndex]));
-                    tempLocation = Integer.parseInt(tempSplit[4]);
-                    decoded[tempLocation] = tempLetter;
+                penultimate = tempSplit.length - 2;
+                ultimate = tempSplit.length - 1;
+
+                tempIndex = Integer.parseInt(String.valueOf(handler.getCharFromValue(Integer.parseInt(tempSplit[penultimate]))));
+                tempLetter = handler.getCharFromValue(Integer.parseInt(tempSplit[tempIndex]));
+                tempLocation = Integer.parseInt(tempSplit[ultimate]);
+                decoded[tempLocation] = tempLetter;
 
             }
         }

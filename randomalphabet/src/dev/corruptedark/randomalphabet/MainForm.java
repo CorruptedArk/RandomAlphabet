@@ -27,8 +27,11 @@ public class MainForm {
     private JButton encodedTextCopyButton;
     private JButton plainTextPasteButton;
     private JButton encodeTextPasteButton;
+    private JSpinner decoySpinner;
+    private JLabel decoyCountLabel;
     private RandomTranslator translator;
-    private SpinnerNumberModel numberModel;
+    private SpinnerNumberModel bucketNumberModel;
+    private SpinnerNumberModel decoyNumberModel;
     private Clipboard clipboard;
 
 
@@ -36,19 +39,27 @@ public class MainForm {
 
         clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
-        numberModel = new SpinnerNumberModel();
-        numberModel.setMinimum(1);
-        numberModel.setMaximum(9999);
+        bucketNumberModel = new SpinnerNumberModel();
+        bucketNumberModel.setMinimum(1);
+        bucketNumberModel.setMaximum(9999);
 
-        bucketSizeSpinner.setModel(numberModel);
+        decoyNumberModel = new SpinnerNumberModel();
+        decoyNumberModel.setMinimum(1);
+        decoyNumberModel.setMaximum(9999);
+
+        bucketSizeSpinner.setModel(bucketNumberModel);
 
         bucketSizeSpinner.setValue(10);
+
+        decoySpinner.setModel(decoyNumberModel);
+
+        decoySpinner.setValue(2);
 
         generateAlphabetButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                translator = new RandomTranslator(keyBox.getText(), (int)bucketSizeSpinner.getValue());
+                translator = new RandomTranslator(keyBox.getText(), (int)bucketSizeSpinner.getValue(), (int)decoySpinner.getValue());
                 feedBackLabel.setForeground(Color.green);
                 feedBackLabel.setText("Alphabet Generated");
                 feedBackLabel.setVisible(true);
@@ -178,7 +189,7 @@ public class MainForm {
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("MainForm");
+        JFrame frame = new JFrame("Random Alphabet");
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             System.out.println(UIManager.getSystemLookAndFeelClassName());
