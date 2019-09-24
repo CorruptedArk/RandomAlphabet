@@ -17,7 +17,7 @@ public class AlphabetHandler {
     private Random generator;
     private List<LetterBucket> alphabet;
     private List<Integer> valueList;
-    
+    private int numberOffset;
     
     public AlphabetHandler()
     {
@@ -63,6 +63,8 @@ public class AlphabetHandler {
                 valueIndex++;
             }
         }
+
+        numberOffset = valueList.get(generator.nextInt(valueList.size()));
     }
     
     
@@ -97,6 +99,24 @@ public class AlphabetHandler {
         }
         
         return value;
+    }
+
+    public int getValueForNumber(int number)
+    {
+        int value;
+
+        value = number + numberOffset;
+
+        return value;
+    }
+
+    public int getNumberForValue(int value)
+    {
+        int number;
+
+        number = value - numberOffset;
+
+        return number;
     }
     
     public int randomValue()
