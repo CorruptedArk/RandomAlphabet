@@ -1,12 +1,15 @@
 package dev.corruptedark.randomalphabet;
 
 import javax.swing.*;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class MainForm {
 
@@ -29,6 +32,8 @@ public class MainForm {
     private JButton encodeTextPasteButton;
     private JSpinner decoySpinner;
     private JLabel decoyCountLabel;
+    private JButton plainTextClearButton;
+    private JButton encodeTextClearButton;
     private RandomTranslator translator;
     private SpinnerNumberModel bucketNumberModel;
     private SpinnerNumberModel decoyNumberModel;
@@ -36,7 +41,6 @@ public class MainForm {
 
 
     public MainForm() {
-
         clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
         bucketNumberModel = new SpinnerNumberModel();
@@ -117,7 +121,7 @@ public class MainForm {
                 super.mouseClicked(e);
 
                 StringSelection selection = new StringSelection(plainTextBox.getText());
-                clipboard.setContents(selection, null);
+                clipboard.setContents(selection, selection);
 
                 feedBackLabel.setText("Text Copied");
                 feedBackLabel.setForeground(Color.green);
@@ -133,8 +137,22 @@ public class MainForm {
 
                 try
                 {
-                    String pasteText = (String)clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
-                    plainTextBox.setText(pasteText);
+                    StringBuilder pasteText = new StringBuilder();
+                    InputStreamReader reader = (InputStreamReader)clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
+                    BufferedReader bufferedReader = new BufferedReader(reader);
+
+
+                    while (bufferedReader.ready())
+                    {
+                        pasteText.append(bufferedReader.readLine()).append("\n");
+                    }
+
+                    bufferedReader.close();
+
+                    if(pasteText.length() > 0)
+                        pasteText.deleteCharAt(pasteText.length() - 1);
+
+                    plainTextBox.setText(pasteText.toString());
                     feedBackLabel.setText("Paste Successful");
                     feedBackLabel.setForeground(Color.green);
                     feedBackLabel.setVisible(true);
@@ -144,6 +162,7 @@ public class MainForm {
                     feedBackLabel.setText("Invalid Paste");
                     feedBackLabel.setForeground(Color.red);
                     feedBackLabel.setVisible(true);
+                    except.printStackTrace();
                 }
 
             }
@@ -156,7 +175,7 @@ public class MainForm {
                 super.mouseClicked(e);
 
                 StringSelection selection = new StringSelection(encodedTextBox.getText());
-                clipboard.setContents(selection, null);
+                clipboard.setContents(selection, selection);
 
                 feedBackLabel.setText("Text Copied");
                 feedBackLabel.setForeground(Color.green);
@@ -172,8 +191,27 @@ public class MainForm {
 
                 try
                 {
-                    String pasteText = (String)clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
-                    encodedTextBox.setText(pasteText);
+                    StringBuilder pasteText = new StringBuilder();
+                    try {
+
+                        InputStreamReader reader = (InputStreamReader) clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
+                        BufferedReader bufferedReader = new BufferedReader(reader);
+
+                        while (bufferedReader.ready()) {
+                            pasteText.append(bufferedReader.readLine()).append("\n");
+                        }
+                        bufferedReader.close();
+
+                        if (pasteText.length() > 0)
+                            pasteText.deleteCharAt(pasteText.length() - 1);
+                    }
+                    catch (ClassCastException classExcept)
+                    {
+                        String tempPasteString =  (String) clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
+                        pasteText.append(tempPasteString);
+                    }
+
+                    encodedTextBox.setText(pasteText.toString());
                     feedBackLabel.setText("Paste Successful");
                     feedBackLabel.setForeground(Color.green);
                     feedBackLabel.setVisible(true);
@@ -183,7 +221,28 @@ public class MainForm {
                     feedBackLabel.setText("Invalid Paste");
                     feedBackLabel.setForeground(Color.red);
                     feedBackLabel.setVisible(true);
+                    except.printStackTrace();
                 }
+            }
+        });
+
+
+        plainTextClearButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                plainTextBox.setText("");
+            }
+        });
+
+
+        encodeTextClearButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                encodedTextBox.setText("");
             }
         });
     }

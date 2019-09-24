@@ -5,9 +5,11 @@
  */
 package dev.corruptedark.randomalphabet;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.security.MessageDigest;
 
 /**
  *
@@ -18,6 +20,8 @@ public class AlphabetHandler {
     private List<LetterBucket> alphabet;
     private List<Integer> valueList;
     private int numberOffset;
+
+    private final String SHA_256 = "SHA-256";
     
     public AlphabetHandler()
     {
@@ -28,7 +32,18 @@ public class AlphabetHandler {
     
     public void generateAlphabet(String key, int bucketSize)
     {
-        generator.setSeed(key.hashCode());
+        try {
+            MessageDigest md = MessageDigest.getInstance(SHA_256);
+            md.update(key.getBytes(StandardCharsets.UTF_8));
+            byte[] bytes = md.digest();
+            String byteString = new String(bytes);
+            generator.setSeed(byteString.hashCode());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
         alphabet.clear();
         valueList.clear();
         
