@@ -138,19 +138,24 @@ public class MainForm {
                 try
                 {
                     StringBuilder pasteText = new StringBuilder();
-                    InputStreamReader reader = (InputStreamReader)clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
-                    BufferedReader bufferedReader = new BufferedReader(reader);
+                    try {
 
+                        InputStreamReader reader = (InputStreamReader) clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
+                        BufferedReader bufferedReader = new BufferedReader(reader);
 
-                    while (bufferedReader.ready())
-                    {
-                        pasteText.append(bufferedReader.readLine()).append("\n");
+                        while (bufferedReader.ready()) {
+                            pasteText.append(bufferedReader.readLine()).append("\n");
+                        }
+                        bufferedReader.close();
+
+                        if (pasteText.length() > 0)
+                            pasteText.deleteCharAt(pasteText.length() - 1);
                     }
-
-                    bufferedReader.close();
-
-                    if(pasteText.length() > 0)
-                        pasteText.deleteCharAt(pasteText.length() - 1);
+                    catch (ClassCastException classExcept)
+                    {
+                        String tempPasteString =  (String) clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
+                        pasteText.append(tempPasteString);
+                    }
 
                     plainTextBox.setText(pasteText.toString());
                     feedBackLabel.setText("Paste Successful");
