@@ -1,7 +1,23 @@
+/*
+ * RandomAlphabet is a Java GUI tool to encode and decode text strings using pseudorandomly generated ciphers from string keys.
+ *     Copyright (C) 2019  Noah Stanford <noahstandingford@gmail.com>
+ *
+ *     RandomAlphabet is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     RandomAlphabet is distributed in the hope that it will be fun, interesting, and useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package dev.corruptedark.randomalphabet;
 
 import javax.swing.*;
-import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -34,11 +50,12 @@ public class MainForm {
     private JLabel decoyCountLabel;
     private JButton plainTextClearButton;
     private JButton encodeTextClearButton;
+    private JButton aboutButton;
     private RandomTranslator translator;
     private SpinnerNumberModel bucketNumberModel;
     private SpinnerNumberModel decoyNumberModel;
     private Clipboard clipboard;
-
+    private AboutForm aboutForm;
 
     public MainForm() {
         clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -248,6 +265,22 @@ public class MainForm {
                 super.mouseClicked(e);
 
                 encodedTextBox.setText("");
+            }
+        });
+        aboutButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                if(aboutForm == null)
+                {
+                    aboutForm = new AboutForm();
+                }
+                else if(aboutForm.isDisplayable())
+                {
+                    aboutForm.setVisible(true);
+                }
+
             }
         });
     }

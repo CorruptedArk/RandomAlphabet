@@ -2,14 +2,29 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="497a976b-cbd4-4d75-a807-ff06db0c3462" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/randomalphabet/randomalphabet.iml" beforeDir="false" afterPath="$PROJECT_DIR$/randomalphabet/randomalphabet.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/randomalphabet/src/dev/corruptedark/randomalphabet/AlphabetHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/randomalphabet/src/dev/corruptedark/randomalphabet/AlphabetHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/randomalphabet/src/dev/corruptedark/randomalphabet/LetterBucket.java" beforeDir="false" afterPath="$PROJECT_DIR$/randomalphabet/src/dev/corruptedark/randomalphabet/LetterBucket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/randomalphabet/src/dev/corruptedark/randomalphabet/MainForm.form" beforeDir="false" afterPath="$PROJECT_DIR$/randomalphabet/src/dev/corruptedark/randomalphabet/MainForm.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/randomalphabet/src/dev/corruptedark/randomalphabet/MainForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/randomalphabet/src/dev/corruptedark/randomalphabet/MainForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/randomalphabet/src/dev/corruptedark/randomalphabet/NTuple.java" beforeDir="false" afterPath="$PROJECT_DIR$/randomalphabet/src/dev/corruptedark/randomalphabet/NTuple.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/randomalphabet/src/dev/corruptedark/randomalphabet/RandomTranslator.java" beforeDir="false" afterPath="$PROJECT_DIR$/randomalphabet/src/dev/corruptedark/randomalphabet/RandomTranslator.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ElmWorkspace">
+    <elmProjects />
+    <settings elmCompilerPath="" elmFormatPath="" elmTestPath="" isElmFormatOnSaveEnabled="false" />
   </component>
   <component name="FavoritesManager">
     <favorites_list name="RandomAlphabetIntellij" />
@@ -50,12 +65,15 @@
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW" value="true" />
+    <property name="UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW" value="false" />
     <property name="UI_DESIGNER_EDITOR_MODE.PaletteManager.WIDTH" value="150" />
-    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH" value="311" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH" value="230" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/randomalphabet/src/dev/corruptedark/randomalphabet" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.44431555" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="preferences.language.Kotlin" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -108,5 +126,29 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/randomalphabet/src/dev/corruptedark/randomalphabet/LetterBucket.java</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand>
+      <path>
+        <item name="RandomAlphabet" type="b2602c69:ProjectViewProjectNode" />
+        <item name="randomalphabet" type="462c0819:PsiDirectoryNode" />
+      </path>
+      <path>
+        <item name="RandomAlphabet" type="b2602c69:ProjectViewProjectNode" />
+        <item name="randomalphabet" type="462c0819:PsiDirectoryNode" />
+        <item name="src" type="462c0819:PsiDirectoryNode" />
+      </path>
+    </expand>
+    <select />
   </component>
 </project>
