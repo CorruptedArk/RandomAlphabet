@@ -18,14 +18,14 @@
 package dev.corruptedark.randomalphabet;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class MainForm {
 
@@ -51,6 +51,8 @@ public class MainForm {
     private JButton plainTextClearButton;
     private JButton encodeTextClearButton;
     private JButton aboutButton;
+    private JButton importPlainButton;
+    private JButton importEncodedButton;
     private RandomTranslator translator;
     private SpinnerNumberModel bucketNumberModel;
     private SpinnerNumberModel decoyNumberModel;
@@ -281,6 +283,67 @@ public class MainForm {
                     aboutForm.setVisible(true);
                 }
 
+            }
+        });
+        importPlainButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                feedBackLabel.setVisible(false);
+
+                File selectedFile = null;
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", ".txt");
+                int returnVal = chooser.showOpenDialog(mainForm);
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                    selectedFile = chooser.getSelectedFile();
+                    try {
+                        FileReader reader = new FileReader(selectedFile);
+                        BufferedReader bufferedReader = new BufferedReader(reader);
+
+                        StringBuilder text = new StringBuilder();
+                        while(bufferedReader.ready())
+                        {
+                            text.append(bufferedReader.readLine()).append("\n");
+                        }
+                        plainTextBox.setText(text.toString());
+                    } catch (Exception ex) {
+                        feedBackLabel.setText("Import Failed");
+                        feedBackLabel.setForeground(Color.green);
+                        feedBackLabel.setVisible(true);
+                    }
+                }
+            }
+        });
+        importEncodedButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                feedBackLabel.setVisible(false);
+
+                File selectedFile = null;
+                JFileChooser chooser = new JFileChooser();
+                int returnVal = chooser.showOpenDialog(mainForm);
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                    selectedFile = chooser.getSelectedFile();
+                    try {
+                        FileReader reader = new FileReader(selectedFile);
+                        BufferedReader bufferedReader = new BufferedReader(reader);
+
+                        StringBuilder text = new StringBuilder();
+                        while(bufferedReader.ready())
+                        {
+                            text.append(bufferedReader.readLine()).append("\n");
+                        }
+                        encodedTextBox.setText(text.toString());
+                    } catch (Exception ex) {
+                        feedBackLabel.setText("Import Failed");
+                        feedBackLabel.setForeground(Color.green);
+                        feedBackLabel.setVisible(true);
+                    }
+                }
             }
         });
     }
