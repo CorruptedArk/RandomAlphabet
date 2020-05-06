@@ -53,6 +53,8 @@ public class MainForm {
     private JButton aboutButton;
     private JButton importPlainButton;
     private JButton importEncodedButton;
+    private JButton exportPlainButton;
+    private JButton exportEncodedButton;
     private RandomTranslator translator;
     private SpinnerNumberModel bucketNumberModel;
     private SpinnerNumberModel decoyNumberModel;
@@ -163,7 +165,7 @@ public class MainForm {
                         BufferedReader bufferedReader = new BufferedReader(reader);
 
                         while (bufferedReader.ready()) {
-                            pasteText.append(bufferedReader.readLine()).append("\n");
+                            pasteText.append(bufferedReader.readLine());
                         }
                         bufferedReader.close();
 
@@ -222,7 +224,7 @@ public class MainForm {
                         BufferedReader bufferedReader = new BufferedReader(reader);
 
                         while (bufferedReader.ready()) {
-                            pasteText.append(bufferedReader.readLine()).append("\n");
+                            pasteText.append(bufferedReader.readLine());
                         }
                         bufferedReader.close();
 
@@ -294,7 +296,8 @@ public class MainForm {
 
                 File selectedFile = null;
                 JFileChooser chooser = new JFileChooser();
-                FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", ".txt");
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt","md","text");
+                chooser.setFileFilter(filter);
                 int returnVal = chooser.showOpenDialog(mainForm);
                 if(returnVal == JFileChooser.APPROVE_OPTION) {
                     selectedFile = chooser.getSelectedFile();
@@ -305,8 +308,9 @@ public class MainForm {
                         StringBuilder text = new StringBuilder();
                         while(bufferedReader.ready())
                         {
-                            text.append(bufferedReader.readLine()).append("\n");
+                            text.append(bufferedReader.readLine());
                         }
+                        bufferedReader.close();
                         plainTextBox.setText(text.toString());
                     } catch (Exception ex) {
                         feedBackLabel.setText("Import Failed");
@@ -325,6 +329,8 @@ public class MainForm {
 
                 File selectedFile = null;
                 JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt","md","text");
+                chooser.setFileFilter(filter);
                 int returnVal = chooser.showOpenDialog(mainForm);
                 if(returnVal == JFileChooser.APPROVE_OPTION) {
                     selectedFile = chooser.getSelectedFile();
@@ -335,8 +341,9 @@ public class MainForm {
                         StringBuilder text = new StringBuilder();
                         while(bufferedReader.ready())
                         {
-                            text.append(bufferedReader.readLine()).append("\n");
+                            text.append(bufferedReader.readLine());
                         }
+                        bufferedReader.close();
                         encodedTextBox.setText(text.toString());
                     } catch (Exception ex) {
                         feedBackLabel.setText("Import Failed");
@@ -344,6 +351,65 @@ public class MainForm {
                         feedBackLabel.setVisible(true);
                     }
                 }
+            }
+        });
+        exportPlainButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                feedBackLabel.setVisible(false);
+
+                File selectedFile = null;
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", ".txt");
+                chooser.setFileFilter(filter);
+                int returnVal = chooser.showSaveDialog(mainForm);
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                    selectedFile = chooser.getSelectedFile();
+                    try {
+                        FileWriter writer = new FileWriter(selectedFile);
+                        BufferedWriter bufferedWriter = new BufferedWriter(writer);
+
+                        String text = plainTextBox.getText();
+                        bufferedWriter.write(text);
+                        bufferedWriter.close();
+                    } catch (Exception ex) {
+                        feedBackLabel.setText("Export Failed");
+                        feedBackLabel.setForeground(Color.green);
+                        feedBackLabel.setVisible(true);
+                    }
+                }
+            }
+        });
+        exportEncodedButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                feedBackLabel.setVisible(false);
+
+                File selectedFile = null;
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", ".txt");
+                chooser.setFileFilter(filter);
+                int returnVal = chooser.showSaveDialog(mainForm);
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                    selectedFile = chooser.getSelectedFile();
+                    try {
+                        FileWriter writer = new FileWriter(selectedFile);
+                        BufferedWriter bufferedWriter = new BufferedWriter(writer);
+
+                        String text = encodedTextBox.getText();
+                        bufferedWriter.write(text);
+                        bufferedWriter.close();
+                    } catch (Exception ex) {
+                        feedBackLabel.setText("Export Failed");
+                        feedBackLabel.setForeground(Color.green);
+                        feedBackLabel.setVisible(true);
+                    }
+                }
+
             }
         });
     }
