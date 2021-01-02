@@ -57,9 +57,9 @@ public class RandomTranslator {
 
                 tempArray[tempRealCharIndex] = handler.getValueForLetter(text.charAt(i));
 
-                tempRealCharIndex = handler.getValueForNumber(tempRealCharIndex);
+                tempRealCharIndex = handler.encodeNumber(tempRealCharIndex, decoyCount + 1);
 
-                tempLocation = handler.getValueForNumber(i);
+                tempLocation = handler.encodeNumber(i, text.length());
 
                 tupleList.add(new NTuple(tempArray.clone(), tempRealCharIndex, tempLocation));
             }
@@ -95,7 +95,8 @@ public class RandomTranslator {
     public String decodeText(String text)
     {
         String[] pieces = text.split(",");
-        char[] decoded = new char[pieces.length / (tupleSize)];
+        int tupleCount = pieces.length / tupleSize;
+        char[] decoded = new char[tupleCount];
 
         String[] tempSplit = new String[tupleSize];
         int tempIndex;
@@ -116,11 +117,10 @@ public class RandomTranslator {
                 penultimate = tempSplit.length - 2;
                 ultimate = tempSplit.length - 1;
 
-                tempIndex = handler.getNumberForValue(Integer.parseInt(tempSplit[penultimate]));
+                tempIndex = handler.decodeNumberValue(Integer.parseInt(tempSplit[penultimate]), decoyCount + 1);
                 tempLetter = handler.getCharFromValue(Integer.parseInt(tempSplit[tempIndex]));
-                tempLocation = handler.getNumberForValue(Integer.parseInt(tempSplit[ultimate]));
+                tempLocation = handler.decodeNumberValue(Integer.parseInt(tempSplit[ultimate]), tupleCount);
                 decoded[tempLocation] = tempLetter;
-
             }
         }
         catch (Exception e)

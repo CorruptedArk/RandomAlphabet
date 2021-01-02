@@ -28,7 +28,6 @@ public class AlphabetHandler {
     private Random generator;
     private List<LetterBucket> alphabet;
     private List<Integer> valueList;
-    private int numberOffset;
 
     private final String SHA_256 = "SHA-256";
     
@@ -87,8 +86,6 @@ public class AlphabetHandler {
                 valueIndex++;
             }
         }
-
-        numberOffset = valueList.get(generator.nextInt(valueList.size()));
     }
     
     
@@ -125,20 +122,23 @@ public class AlphabetHandler {
         return value;
     }
 
-    public int getValueForNumber(int number)
+    public int encodeNumber(int number, int numberMax)
     {
-        int value;
+        int encoded;
 
-        value = number + numberOffset;
+        encoded = randomValue();
 
-        return value;
+        int diff = (number - encoded) % numberMax;
+        encoded += diff;
+
+        return encoded;
     }
 
-    public int getNumberForValue(int value)
+    public int decodeNumberValue(int value, int numberMax)
     {
         int number;
 
-        number = value - numberOffset;
+        number = value % numberMax;
 
         return number;
     }
