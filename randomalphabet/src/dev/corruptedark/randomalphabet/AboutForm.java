@@ -25,7 +25,7 @@ public class AboutForm extends JFrame {
     private JPanel panel;
 
 
-    public AboutForm(){
+    public AboutForm() {
         setTitle("About Automatic Hangman");
         setContentPane(panel);
         pack();

@@ -19,9 +19,9 @@ package dev.corruptedark.randomalphabet;
 
 
 public class NTuple {
-    private int[] values;
-    private int index;
-    private int location;
+    private final int[] values;
+    private final int index;
+    private final int location;
 
     public NTuple(int[] values, int penultimate, int ultimate)
     {

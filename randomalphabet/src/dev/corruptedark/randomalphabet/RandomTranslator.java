@@ -23,77 +23,68 @@ import java.util.List;
 
 
 public class RandomTranslator {
-    
-    private SecureRandom rand;
-    private AlphabetHandler handler;
-    private int decoyCount;
-    private int tupleSize;
 
-    
-    public RandomTranslator(String key, int bucketSize, int decoyCount)
-    {
+    private final SecureRandom rand;
+    private final AlphabetHandler handler;
+    private final int decoyCount;
+    private final int tupleSize;
+
+
+    public RandomTranslator(String key, int bucketSize, int decoyCount) {
         this.decoyCount = decoyCount;
         this.tupleSize = decoyCount + 3;
         rand = new SecureRandom();
         handler = new AlphabetHandler();
         handler.generateAlphabet(key, bucketSize);
     }
-    
-    public String encodeText(String text)
-    {
+
+    public String encodeText(String text) throws NumberFormatException {
         List<NTuple> tupleList = new ArrayList<>();
         int[] tempArray = new int[decoyCount + 1];
         int tempRealCharIndex;
         int tempLocation;
-        String encodedText;
+        StringBuilder encodedText;
 
-        try {
-            for (int i = 0; i < text.length(); i++) {
-                tempRealCharIndex = rand.nextInt(decoyCount + 1);
+        for (int i = 0; i < text.length(); i++) {
+            tempRealCharIndex = rand.nextInt(decoyCount + 1);
 
-                for (int j = 0; j < decoyCount + 1; j++) {
-                    tempArray[j] = handler.randomValue();
-                }
-
-                tempArray[tempRealCharIndex] = handler.getValueForLetter(text.charAt(i));
-
-                tempRealCharIndex = handler.encodeNumber(tempRealCharIndex, decoyCount + 1);
-
-                tempLocation = handler.encodeNumber(i, text.length());
-
-                tupleList.add(new NTuple(tempArray.clone(), tempRealCharIndex, tempLocation));
+            for (int j = 0; j < decoyCount + 1; j++) {
+                tempArray[j] = handler.randomValue();
             }
 
-            for (int i = 0; i < tupleList.size(); i++) {
-                int index = rand.nextInt(tupleList.size());
-                NTuple temp = tupleList.get(index);
-                tupleList.set(index, tupleList.get(i));
-                tupleList.set(i, temp);
-            }
+            tempArray[tempRealCharIndex] = handler.getValueForLetter(text.charAt(i));
 
-            encodedText = "";
-            for (NTuple nTuple : tupleList) {
-                tempArray = nTuple.getValues();
-                tempRealCharIndex = nTuple.getIndex();
-                tempLocation = nTuple.getLocation();
+            tempRealCharIndex = handler.encodeNumber(tempRealCharIndex, decoyCount + 1);
 
-                for (int i : tempArray) {
-                    encodedText += String.valueOf(i) + ",";
-                }
+            tempLocation = handler.encodeNumber(i, text.length());
 
-                encodedText += String.valueOf(tempRealCharIndex) + "," + String.valueOf(tempLocation) + ",";
-            }
+            tupleList.add(new NTuple(tempArray.clone(), tempRealCharIndex, tempLocation));
         }
-        catch (Exception e)
-        {
-            throw e;
+
+        for (int i = 0; i < tupleList.size(); i++) {
+            int index = rand.nextInt(tupleList.size());
+            NTuple temp = tupleList.get(index);
+            tupleList.set(index, tupleList.get(i));
+            tupleList.set(i, temp);
         }
-        
-        return encodedText;
+
+        encodedText = new StringBuilder();
+        for (NTuple nTuple : tupleList) {
+            tempArray = nTuple.getValues();
+            tempRealCharIndex = nTuple.getIndex();
+            tempLocation = nTuple.getLocation();
+
+            for (int i : tempArray) {
+                encodedText.append(i).append(",");
+            }
+
+            encodedText.append(tempRealCharIndex).append(",").append(tempLocation).append(",");
+        }
+
+        return encodedText.toString();
     }
-    
-    public String decodeText(String text)
-    {
+
+    public String decodeText(String text) throws NumberFormatException {
         String[] pieces = text.split(",");
         int tupleCount = pieces.length / tupleSize;
         char[] decoded = new char[tupleCount];
@@ -106,26 +97,17 @@ public class RandomTranslator {
         int penultimate;
         int ultimate;
 
-        try
-        {
-            for(int i = 0; i < pieces.length;)
-            {
-                for(int j = 0; j < tempSplit.length; j++, i++)
-                {
-                    tempSplit[j] = pieces[i];
-                }
-                penultimate = tempSplit.length - 2;
-                ultimate = tempSplit.length - 1;
-
-                tempIndex = handler.decodeNumberValue(Integer.parseInt(tempSplit[penultimate]), decoyCount + 1);
-                tempLetter = handler.getCharFromValue(Integer.parseInt(tempSplit[tempIndex]));
-                tempLocation = handler.decodeNumberValue(Integer.parseInt(tempSplit[ultimate]), tupleCount);
-                decoded[tempLocation] = tempLetter;
+        for (int i = 0; i < pieces.length; ) {
+            for (int j = 0; j < tempSplit.length; j++, i++) {
+                tempSplit[j] = pieces[i];
             }
-        }
-        catch (Exception e)
-        {
-            throw e;
+            penultimate = tempSplit.length - 2;
+            ultimate = tempSplit.length - 1;
+
+            tempIndex = handler.decodeNumberValue(Integer.parseInt(tempSplit[penultimate]), decoyCount + 1);
+            tempLetter = handler.getCharFromValue(Integer.parseInt(tempSplit[tempIndex]));
+            tempLocation = handler.decodeNumberValue(Integer.parseInt(tempSplit[ultimate]), tupleCount);
+            decoded[tempLocation] = tempLetter;
         }
 
         return new String(decoded);

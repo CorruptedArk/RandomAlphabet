@@ -84,7 +84,7 @@ public class MainForm {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                translator = new RandomTranslator(keyBox.getText(), (int)bucketSizeSpinner.getValue(), (int)decoySpinner.getValue());
+                translator = new RandomTranslator(keyBox.getText(), (int) bucketSizeSpinner.getValue(), (int) decoySpinner.getValue());
                 feedBackLabel.setForeground(Color.green);
                 feedBackLabel.setText("Alphabet Generated");
                 feedBackLabel.setVisible(true);
@@ -96,15 +96,11 @@ public class MainForm {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if(translator != null)
-                {
-                    try
-                    {
+                if (translator != null) {
+                    try {
                         encodedTextBox.setText(translator.encodeText(plainTextBox.getText()));
                         feedBackLabel.setVisible(false);
-                    }
-                    catch (Exception except)
-                    {
+                    } catch (Exception except) {
                         feedBackLabel.setText("Invalid Translation");
                         feedBackLabel.setForeground(Color.red);
                         feedBackLabel.setVisible(true);
@@ -118,15 +114,11 @@ public class MainForm {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if(translator != null)
-                {
-                    try
-                    {
+                if (translator != null) {
+                    try {
                         plainTextBox.setText(translator.decodeText(encodedTextBox.getText()));
                         feedBackLabel.setVisible(false);
-                    }
-                    catch(Exception except)
-                    {
+                    } catch (Exception except) {
                         feedBackLabel.setText("Invalid Translation");
                         feedBackLabel.setForeground(Color.red);
                         feedBackLabel.setVisible(true);
@@ -156,8 +148,7 @@ public class MainForm {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
 
-                try
-                {
+                try {
                     StringBuilder pasteText = new StringBuilder();
                     try {
 
@@ -171,10 +162,8 @@ public class MainForm {
 
                         if (pasteText.length() > 0)
                             pasteText.deleteCharAt(pasteText.length() - 1);
-                    }
-                    catch (ClassCastException classExcept)
-                    {
-                        String tempPasteString =  (String) clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
+                    } catch (ClassCastException classExcept) {
+                        String tempPasteString = (String) clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
                         pasteText.append(tempPasteString);
                     }
 
@@ -182,9 +171,7 @@ public class MainForm {
                     feedBackLabel.setText("Paste Successful");
                     feedBackLabel.setForeground(Color.green);
                     feedBackLabel.setVisible(true);
-                }
-                catch (Exception except)
-                {
+                } catch (Exception except) {
                     feedBackLabel.setText("Invalid Paste");
                     feedBackLabel.setForeground(Color.red);
                     feedBackLabel.setVisible(true);
@@ -215,8 +202,7 @@ public class MainForm {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
 
-                try
-                {
+                try {
                     StringBuilder pasteText = new StringBuilder();
                     try {
 
@@ -230,10 +216,8 @@ public class MainForm {
 
                         if (pasteText.length() > 0)
                             pasteText.deleteCharAt(pasteText.length() - 1);
-                    }
-                    catch (ClassCastException classExcept)
-                    {
-                        String tempPasteString =  (String) clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
+                    } catch (ClassCastException classExcept) {
+                        String tempPasteString = (String) clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
                         pasteText.append(tempPasteString);
                     }
 
@@ -241,9 +225,7 @@ public class MainForm {
                     feedBackLabel.setText("Paste Successful");
                     feedBackLabel.setForeground(Color.green);
                     feedBackLabel.setVisible(true);
-                }
-                catch (Exception except)
-                {
+                } catch (Exception except) {
                     feedBackLabel.setText("Invalid Paste");
                     feedBackLabel.setForeground(Color.red);
                     feedBackLabel.setVisible(true);
@@ -276,12 +258,9 @@ public class MainForm {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
 
-                if(aboutForm == null)
-                {
+                if (aboutForm == null) {
                     aboutForm = new AboutForm();
-                }
-                else if(aboutForm.isDisplayable())
-                {
+                } else if (aboutForm.isDisplayable()) {
                     aboutForm.setVisible(true);
                 }
 
@@ -296,18 +275,17 @@ public class MainForm {
 
                 File selectedFile = null;
                 JFileChooser chooser = new JFileChooser();
-                FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt","md","text");
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "md", "text");
                 chooser.setFileFilter(filter);
                 int returnVal = chooser.showOpenDialog(mainForm);
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
                     selectedFile = chooser.getSelectedFile();
                     try {
                         FileReader reader = new FileReader(selectedFile);
                         BufferedReader bufferedReader = new BufferedReader(reader);
 
                         StringBuilder text = new StringBuilder();
-                        while(bufferedReader.ready())
-                        {
+                        while (bufferedReader.ready()) {
                             text.append(bufferedReader.readLine());
                         }
                         bufferedReader.close();
@@ -329,18 +307,17 @@ public class MainForm {
 
                 File selectedFile = null;
                 JFileChooser chooser = new JFileChooser();
-                FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt","md","text");
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "md", "text");
                 chooser.setFileFilter(filter);
                 int returnVal = chooser.showOpenDialog(mainForm);
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
                     selectedFile = chooser.getSelectedFile();
                     try {
                         FileReader reader = new FileReader(selectedFile);
                         BufferedReader bufferedReader = new BufferedReader(reader);
 
                         StringBuilder text = new StringBuilder();
-                        while(bufferedReader.ready())
-                        {
+                        while (bufferedReader.ready()) {
                             text.append(bufferedReader.readLine());
                         }
                         bufferedReader.close();
@@ -365,7 +342,7 @@ public class MainForm {
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", ".txt");
                 chooser.setFileFilter(filter);
                 int returnVal = chooser.showSaveDialog(mainForm);
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
                     selectedFile = chooser.getSelectedFile();
                     try {
                         FileWriter writer = new FileWriter(selectedFile);
@@ -394,7 +371,7 @@ public class MainForm {
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", ".txt");
                 chooser.setFileFilter(filter);
                 int returnVal = chooser.showSaveDialog(mainForm);
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
                     selectedFile = chooser.getSelectedFile();
                     try {
                         FileWriter writer = new FileWriter(selectedFile);
@@ -419,9 +396,7 @@ public class MainForm {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             System.out.println(UIManager.getSystemLookAndFeelClassName());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         frame.setContentPane(new MainForm().mainForm);
