@@ -26,6 +26,9 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class MainForm {
 
@@ -55,11 +58,18 @@ public class MainForm {
     private JButton importEncodedButton;
     private JButton exportPlainButton;
     private JButton exportEncodedButton;
+    private JTextField hashBox;
+    private JButton importHashButton;
+    private JButton exportHashButton;
+    private JButton copyHashButton;
+    private JButton pasteHashButton;
+    private JButton clearHashButton;
     private RandomTranslator translator;
     private SpinnerNumberModel bucketNumberModel;
     private SpinnerNumberModel decoyNumberModel;
-    private Clipboard clipboard;
+    private final Clipboard clipboard;
     private AboutForm aboutForm;
+    private final String SHA_256 = "SHA-256";
 
     public MainForm() {
         clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -100,6 +110,7 @@ public class MainForm {
                     try {
                         encodedTextBox.setText(translator.encodeText(plainTextBox.getText()));
                         feedBackLabel.setVisible(false);
+                        hashBox.setText(sha256HashHexString(plainTextBox.getText() + encodedTextBox.getText()));
                     } catch (Exception except) {
                         feedBackLabel.setText("Invalid Translation");
                         feedBackLabel.setForeground(Color.red);
@@ -118,11 +129,22 @@ public class MainForm {
                     try {
                         plainTextBox.setText(translator.decodeText(encodedTextBox.getText()));
                         feedBackLabel.setVisible(false);
+                        if (!hashBox.getText().isBlank()) {
+                            if (hashBox.getText().equals(sha256HashHexString(plainTextBox.getText() + encodedTextBox.getText()))) {
+                                feedBackLabel.setText("Valid Hash");
+                                feedBackLabel.setForeground(Color.green);
+                            } else {
+                                feedBackLabel.setText("Invalid Hash");
+                                feedBackLabel.setForeground(Color.red);
+                            }
+                            feedBackLabel.setVisible(true);
+                        }
                     } catch (Exception except) {
                         feedBackLabel.setText("Invalid Translation");
                         feedBackLabel.setForeground(Color.red);
                         feedBackLabel.setVisible(true);
                     }
+
                 }
             }
         });
@@ -253,6 +275,8 @@ public class MainForm {
                 encodedTextBox.setText("");
             }
         });
+
+
         aboutButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -266,6 +290,8 @@ public class MainForm {
 
             }
         });
+
+
         importPlainButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -273,7 +299,7 @@ public class MainForm {
 
                 feedBackLabel.setVisible(false);
 
-                File selectedFile = null;
+                File selectedFile;
                 JFileChooser chooser = new JFileChooser();
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "md", "text");
                 chooser.setFileFilter(filter);
@@ -298,6 +324,8 @@ public class MainForm {
                 }
             }
         });
+
+
         importEncodedButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -305,7 +333,7 @@ public class MainForm {
 
                 feedBackLabel.setVisible(false);
 
-                File selectedFile = null;
+                File selectedFile;
                 JFileChooser chooser = new JFileChooser();
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "md", "text");
                 chooser.setFileFilter(filter);
@@ -330,6 +358,8 @@ public class MainForm {
                 }
             }
         });
+
+
         exportPlainButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -337,7 +367,7 @@ public class MainForm {
 
                 feedBackLabel.setVisible(false);
 
-                File selectedFile = null;
+                File selectedFile;
                 JFileChooser chooser = new JFileChooser();
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", ".txt");
                 chooser.setFileFilter(filter);
@@ -359,6 +389,8 @@ public class MainForm {
                 }
             }
         });
+
+
         exportEncodedButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -366,7 +398,7 @@ public class MainForm {
 
                 feedBackLabel.setVisible(false);
 
-                File selectedFile = null;
+                File selectedFile;
                 JFileChooser chooser = new JFileChooser();
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", ".txt");
                 chooser.setFileFilter(filter);
@@ -389,6 +421,153 @@ public class MainForm {
 
             }
         });
+
+
+        copyHashButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                StringSelection selection = new StringSelection(hashBox.getText());
+                clipboard.setContents(selection, selection);
+
+                feedBackLabel.setText("Text Copied");
+                feedBackLabel.setForeground(Color.green);
+                feedBackLabel.setVisible(true);
+            }
+        });
+
+
+        pasteHashButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                try {
+                    StringBuilder pasteText = new StringBuilder();
+                    try {
+
+                        InputStreamReader reader = (InputStreamReader) clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
+                        BufferedReader bufferedReader = new BufferedReader(reader);
+
+                        while (bufferedReader.ready()) {
+                            pasteText.append(bufferedReader.readLine());
+                        }
+                        bufferedReader.close();
+
+                        if (pasteText.length() > 0)
+                            pasteText.deleteCharAt(pasteText.length() - 1);
+                    } catch (ClassCastException classExcept) {
+                        String tempPasteString = (String) clipboard.getData(DataFlavor.selectBestTextFlavor(clipboard.getAvailableDataFlavors()));
+                        pasteText.append(tempPasteString);
+                    }
+
+                    hashBox.setText(pasteText.toString());
+                    feedBackLabel.setText("Paste Successful");
+                    feedBackLabel.setForeground(Color.green);
+                    feedBackLabel.setVisible(true);
+                } catch (Exception except) {
+                    feedBackLabel.setText("Invalid Paste");
+                    feedBackLabel.setForeground(Color.red);
+                    feedBackLabel.setVisible(true);
+                    except.printStackTrace();
+                }
+            }
+        });
+
+
+        clearHashButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                hashBox.setText("");
+            }
+        });
+
+
+        importHashButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                feedBackLabel.setVisible(false);
+
+                File selectedFile;
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "md", "text");
+                chooser.setFileFilter(filter);
+                int returnVal = chooser.showOpenDialog(mainForm);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    selectedFile = chooser.getSelectedFile();
+                    try {
+                        FileReader reader = new FileReader(selectedFile);
+                        BufferedReader bufferedReader = new BufferedReader(reader);
+
+                        StringBuilder text = new StringBuilder();
+                        while (bufferedReader.ready()) {
+                            text.append(bufferedReader.readLine());
+                        }
+                        bufferedReader.close();
+                        hashBox.setText(text.toString());
+                    } catch (Exception ex) {
+                        feedBackLabel.setText("Import Failed");
+                        feedBackLabel.setForeground(Color.green);
+                        feedBackLabel.setVisible(true);
+                    }
+                }
+            }
+        });
+
+
+        exportHashButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                feedBackLabel.setVisible(false);
+
+                File selectedFile;
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", ".txt");
+                chooser.setFileFilter(filter);
+                int returnVal = chooser.showSaveDialog(mainForm);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    selectedFile = chooser.getSelectedFile();
+                    try {
+                        FileWriter writer = new FileWriter(selectedFile);
+                        BufferedWriter bufferedWriter = new BufferedWriter(writer);
+
+                        String text = hashBox.getText();
+                        bufferedWriter.write(text);
+                        bufferedWriter.close();
+                    } catch (Exception ex) {
+                        feedBackLabel.setText("Export Failed");
+                        feedBackLabel.setForeground(Color.green);
+                        feedBackLabel.setVisible(true);
+                    }
+                }
+            }
+        });
+    }
+
+    private String sha256HashHexString(String string) throws NoSuchAlgorithmException {
+        StringBuilder hashStringBuilder;
+        byte[] bytes;
+
+        MessageDigest md = MessageDigest.getInstance(SHA_256);
+        md.update(string.getBytes(StandardCharsets.UTF_8));
+        bytes = md.digest();
+        hashStringBuilder = new StringBuilder(2 * bytes.length);
+        for (byte aByte : bytes) {
+            String hex = Integer.toHexString(0xff & aByte);
+            if (hex.length() == 1) {
+                hashStringBuilder.append('0');
+            }
+            hashStringBuilder.append(hex);
+        }
+
+        return hashStringBuilder.toString();
     }
 
     public static void main(String[] args) {

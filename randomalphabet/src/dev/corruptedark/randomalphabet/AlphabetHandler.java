@@ -18,6 +18,7 @@
 package dev.corruptedark.randomalphabet;
 
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -44,7 +45,7 @@ public class AlphabetHandler {
             byte[] bytes = md.digest();
             String byteString = new String(bytes);
             generator.setSeed(byteString.hashCode());
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 
